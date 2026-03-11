@@ -36,8 +36,8 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           <Link href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</Link>
-          <Link href="/terms-and-conditions" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Security</Link>
-          <Link href="/delete-account" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Support</Link>
+          <Link href="/privacy-policy" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+          <Link href="/terms-of-service" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
         </div>
 
         <div className="flex items-center gap-4">

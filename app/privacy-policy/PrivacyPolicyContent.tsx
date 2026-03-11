@@ -4,7 +4,7 @@ import React from "react";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function TermsContent() {
+export default function PrivacyPolicyContent() {
   return (
     <div className="min-h-screen bg-background text-foreground font-mono selection:bg-primary selection:text-primary-foreground">
       <div className="max-w-4xl mx-auto px-6 py-12 md:py-24">

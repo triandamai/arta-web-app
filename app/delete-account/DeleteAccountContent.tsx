@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { MoveLeft, ShieldAlert, Mail, Smartphone } from "lucide-react";
 import Link from "next/link";
 

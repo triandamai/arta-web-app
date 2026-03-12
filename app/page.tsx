@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";

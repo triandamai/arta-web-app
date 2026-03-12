@@ -7,30 +7,48 @@ import { getToken } from "./auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-export class ApiError extends Error {
-  status: number;
-  data: any;
+export type Meta = {
+  code: number;
+  message: string;
+};
 
-  constructor(message: string, status: number, data?: any) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-    this.data = data;
+export type BaseResponse<T> = {
+  type: "SUCCESS" | "FAILURE";
+  data: T;
+  meta: Meta;
+};
+
+export type ApiResponse<T> = {
+  data: null | T;
+  meta: Meta;
+};
+
+async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
+  try {
+    if (response.status >= 500) {
+      return {
+        data: null,
+        meta: {
+          code: response.status,
+          message: response.statusText,
+        },
+      };
+    } else {
+      const data: BaseResponse<T> = await response.json();
+      return {
+        data: data.data,
+        meta: data.meta,
+      };
+    }
+  } catch (e) {
+    return {
+      data: null,
+      meta: {
+        code: 0,
+        message: `${e}`,
+      },
+    };
   }
-}
-
-async function handleResponse<T>(response: Response): Promise<T> {
-  const isJson = response.headers.get("content-type")?.includes("application/json");
-  const data = isJson ? await response.json() : await response.text();
-
-  if (!response.ok) {
-    const message = (data && typeof data === 'object' && data.message) 
-      ? data.message 
-      : (typeof data === 'string' ? data : response.statusText);
-    throw new ApiError(message, response.status, data);
-  }
-
-  return data as T;
 }
 
 const getHeaders = (headers?: HeadersInit): HeadersInit => {
@@ -43,7 +61,10 @@ const getHeaders = (headers?: HeadersInit): HeadersInit => {
 };
 
 export const apiClient = {
-  get: async <T>(path: string, options?: RequestInit): Promise<T> => {
+  get: async <T>(
+    path: string,
+    options?: RequestInit,
+  ): Promise<ApiResponse<T>> => {
     const response = await fetch(`${BASE_URL}${path}`, {
       method: "GET",
       headers: getHeaders(options?.headers),
@@ -52,7 +73,11 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
 
-  post: async <T>(path: string, data?: any, options?: RequestInit): Promise<T> => {
+  post: async <T>(
+    path: string,
+    data?: object | FormData,
+    options?: RequestInit,
+  ): Promise<ApiResponse<T>> => {
     const response = await fetch(`${BASE_URL}${path}`, {
       method: "POST",
       headers: getHeaders(options?.headers),
@@ -62,7 +87,11 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
 
-  put: async <T>(path: string, data?: any, options?: RequestInit): Promise<T> => {
+  put: async <T>(
+    path: string,
+    data?: object | FormData,
+    options?: RequestInit,
+  ): Promise<ApiResponse<T>> => {
     const response = await fetch(`${BASE_URL}${path}`, {
       method: "PUT",
       headers: getHeaders(options?.headers),
@@ -72,7 +101,11 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
 
-  patch: async <T>(path: string, data?: any, options?: RequestInit): Promise<T> => {
+  patch: async <T>(
+    path: string,
+    data?: object,
+    options?: RequestInit,
+  ): Promise<ApiResponse<T>> => {
     const response = await fetch(`${BASE_URL}${path}`, {
       method: "PATCH",
       headers: getHeaders(options?.headers),
@@ -82,7 +115,10 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
 
-  delete: async <T>(path: string, options?: RequestInit): Promise<T> => {
+  delete: async <T>(
+    path: string,
+    options?: RequestInit,
+  ): Promise<ApiResponse<T>> => {
     const response = await fetch(`${BASE_URL}${path}`, {
       method: "DELETE",
       headers: getHeaders(options?.headers),

@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import TermsOfServiceContent from "./TermsOfServiceContent";
+import TermsOfServiceContent from "./terms-of-service-content";
 
 export const metadata: Metadata = {
   title: "Terms of Service - Arta",

@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-const AUTH_TOKEN_KEY = "arta_auth_token";
+import { AUTH_TOKEN_KEY, getToken } from "./lib/auth";
 
 // Define protected and public routes
 const protectedRoutes = ["/dashboard"];
 const publicRoutes = ["/login", "/verify-otp"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { nextUrl } = request;
   const token = request.cookies.get(AUTH_TOKEN_KEY)?.value;
-  const isAuthenticated = !!token;
+  const isAuthenticated = token != null;
 
   const isProtectedRoute = protectedRoutes.some((route) =>
-    nextUrl.pathname.startsWith(route)
+    nextUrl.pathname.startsWith(route),
   );
   const isPublicRoute = publicRoutes.some((route) =>
-    nextUrl.pathname.startsWith(route)
+    nextUrl.pathname.startsWith(route),
   );
 
   // 1. Redirect to login if accessing a protected route without a token

@@ -4,6 +4,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu, 
+  DropdownMenuTrigger, 
+  DropdownMenuContent 
+} from "@/components/ui/dropdown-menu";
+import DownloadButtons from "./DownloadButtons";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -36,6 +42,16 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           <Link href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none">
+              Download
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="p-0 border-none bg-transparent shadow-none">
+              <DownloadButtons variant="navbar" />
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link href="/privacy-policy" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
           <Link href="/terms-of-service" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
         </div>

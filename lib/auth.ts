@@ -3,8 +3,9 @@
  */
 
 export const AUTH_TOKEN_KEY = "fcbd_3afd_6e9c";
+export const AUTH_REFRESH_TOKEN_KEY = "fcbd_3afd_6e4a";
 export const AUTH_EMAIL_KEY = "eb4d_2a1c_9f8d";
-
+export const AUTH_EXPIRED_KEY = "eb4d_2a1c_9f8c"
 /**
  * Retrieves the JWT token from localStorage.
  */
@@ -49,6 +50,49 @@ export const removeToken = (): void => {
 };
 
 /**
+ * Retrieves the JWT refresh token from localStorage.
+ */
+/**
+ * Retrieves the JWT refresh token from localStorage or cookies (fallback).
+ */
+export const getRefreshToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+
+  // Try localStorage first
+  const token = localStorage.getItem(AUTH_REFRESH_TOKEN_KEY);
+  if (token) return token;
+
+  // Fallback to cookie (useful for mid-session loads or middleware sync)
+  const match = document.cookie.match(
+    new RegExp("(^| )" + AUTH_REFRESH_TOKEN_KEY + "=([^;]+)"),
+  );
+  return match ? match[2] : null;
+};
+
+/**
+ * Sets the JWT refresh token in both localStorage and cookies.
+ */
+export const setRefreshToken = (token: string): void => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(AUTH_REFRESH_TOKEN_KEY, token);
+    // Set cookie for middleware access (expires in 7 days, safe for production)
+    document.cookie = `${AUTH_REFRESH_TOKEN_KEY}=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+  }
+};
+
+/**
+ * Removes the JWT refresh token from both localStorage and cookies.
+ */
+export const removeRefreshToken = (): void => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(AUTH_REFRESH_TOKEN_KEY);
+    // Remove cookie
+    document.cookie = `${AUTH_REFRESH_TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    localStorage.removeItem(AUTH_REFRESH_TOKEN_KEY);
+  }
+};
+
+/**
  * Retrieves the email from localStorage.
  */
 export const getEmail = (): string | null => {
@@ -71,3 +115,35 @@ export const setEmail = (email: string): void => {
 export const isAuthenticated = (): boolean => {
   return !!getToken();
 };
+
+
+/**
+ * Retrieves the email from localStorage.
+ */
+export const getExpiredAt = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(AUTH_EXPIRED_KEY);
+};
+
+/**
+ * Sets the email in localStorage.
+ */
+export const setExpiredAt = (email: string): void => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(AUTH_EXPIRED_KEY, email);
+  }
+};
+
+/**
+ * validate expired
+ */
+export const isTokenExpired = (): boolean => {
+  const TIMEOUT = 14 * 60 * 60 * 1000; // 2h
+  const expr = getExpiredAt();
+  if (!expr) return true;
+  const diffMs = new Date().getMilliseconds() - new Date(expr).getMilliseconds();
+  if (diffMs >= TIMEOUT) {
+    return true;
+  }
+  return false;
+}

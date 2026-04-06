@@ -1,16 +1,24 @@
 "use client";
 
-import { gooeyToast } from "@/components/ui/goey-toaster";
-import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/dashboard-table";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import { SectionCards } from "@/components/section-cards";
+import data from "./data.json";
+import { useDashboard } from "@/hooks/use-dashboard";
 
 export function ContentDashboard() {
+  const { stats, loading, fetchStats } = useDashboard();
   return (
-    <Button
-      onClick={() => {
-        gooeyToast.error("sss");
-      }}
-    >
-      Hehe
-    </Button>
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <SectionCards data={stats} />
+          <div className="px-4 lg:px-6">
+            <ChartAreaInteractive />
+          </div>
+          <DataTable data={data} />
+        </div>
+      </div>
+    </div>
   );
 }

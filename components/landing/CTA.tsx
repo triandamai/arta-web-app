@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import DownloadButtons from "./DownloadButtons";
 
 export default function CTA() {
   return (
@@ -21,18 +22,27 @@ export default function CTA() {
           Join thousands of users who have simplified their finances with Arta. Start scanning receipts and tracking expenses today.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Button size="lg" variant="secondary" className="rounded-full px-10 h-14 text-lg font-bold shadow-2xl hover:scale-105 transition-transform group">
-            Get Arta for Free
-            <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-          <div className="flex flex-col items-start gap-3">
-            {[ "No credit card required", "Unlimited free scans"].map((item, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm font-semibold opacity-90">
-                <CheckCircle2 className="w-4 h-4 text-primary-foreground" />
-                {item}
-              </div>
-            ))}
+        <div className="flex flex-col items-center gap-12">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
+            <Button size="lg" variant="secondary" className="rounded-full px-10 h-14 text-lg font-bold shadow-2xl hover:scale-105 transition-transform group">
+              Get Arta for Free
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <div className="flex flex-col items-start gap-3">
+              {[ "No credit card required", "Unlimited free scans"].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm font-semibold opacity-90">
+                  <CheckCircle2 className="w-4 h-4 text-primary-foreground" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] opacity-60">
+              Or download direct to your device
+            </p>
+            <DownloadButtons variant="cta" />
           </div>
         </div>
       </div>

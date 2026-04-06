@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -8,104 +8,107 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { TrendUpIcon, TrendDownIcon } from "@phosphor-icons/react"
+} from "@/components/ui/card";
+import { TrendUpIcon, TrendDownIcon } from "@phosphor-icons/react";
 
-export function SectionCards() {
+import type { DashboardStatistic, DashboardStatItem } from "@/lib/types";
+import { Currency } from "@/lib/currency";
+
+export function SectionCards({ data }: { data: DashboardStatistic | null }) {
+  const listCards = [
+    {
+      key: "income",
+      symbol: "currency",
+    },
+    {
+      key: "balance",
+      symbol: "currency",
+    },
+    {
+      key: "expenses",
+      symbol: "currency",
+    },
+    {
+      key: "totalUser",
+      symbol: "counter",
+    },
+    {
+      key: "totalTransactionRecorded",
+      symbol: "counter",
+    },
+    {
+      key: "totalPocketCreatedRecorded",
+      symbol: "counter",
+    },
+    {
+      key: "totalActiveCategories",
+      symbol: "counter",
+    },
+    {
+      key: "totalSplitBillCreated",
+      symbol: "counter",
+    },
+  ];
+
+  function extractValue(key: string): DashboardStatItem {
+    const result = (data as any)[key] as DashboardStatItem | undefined | null;
+    if (!result) {
+      return {
+        value: 0,
+        percentage: 0,
+        isUp: false,
+      };
+    }
+    return result;
+  }
+
+  function showValue(value: number, symbol: string) {
+    if (symbol === "currency") {
+      return Currency.formatCurrencyByCode(value, "IDR", true, undefined, true);
+    }
+    return value;
+  }
+
   return (
     <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendUpIcon
-              />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month{" "}
-            <TrendUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendDownIcon
-              />
-              -20%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period{" "}
-            <TrendDownIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendUpIcon
-              />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention{" "}
-            <TrendUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendUpIcon
-              />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase{" "}
-            <TrendUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+      {listCards.map((card) => (
+        <Card key={card.key} className="@container/card">
+          <CardHeader>
+            <CardDescription>{card.key}</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              {showValue(extractValue(card.key).value ?? 0, card.symbol)}
+            </CardTitle>
+            <CardAction>
+              <Badge
+                variant="outline"
+                className={
+                  extractValue(card.key).isUp
+                    ? "bg-sky-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+                    : "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"
+                }
+              >
+                {extractValue(card.key).isUp ? (
+                  <TrendUpIcon />
+                ) : (
+                  <TrendDownIcon />
+                )}{" "}
+                +{extractValue(card.key).percentage ?? 0}%
+              </Badge>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              {extractValue(card.key).isUp
+                ? "Trending up this month"
+                : "Trending down this month"}
+              <TrendUpIcon className="size-4" />
+            </div>
+            <div className="text-muted-foreground">
+              Visitors for the last 6 months
+            </div>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
-  )
+  );
 }

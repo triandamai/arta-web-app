@@ -3,7 +3,8 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, PlayCircle } from "lucide-react";
+import { PlayCircle } from "lucide-react";
+import DownloadButtons from "./DownloadButtons";
 
 export default function Hero() {
   return (
@@ -32,15 +33,20 @@ export default function Hero() {
               Arta uses AI to automatically scan receipts, categorize expenses, and help you split bills effortlessly. Get a clear view of your finances in seconds.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
-              <Button size="lg" className="rounded-full px-8 h-12 text-base font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:scale-105 group">
-                Start Tracking Free
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button variant="ghost" size="lg" className="rounded-full px-8 h-12 text-base font-semibold group">
-                <PlayCircle className="w-5 h-5 mr-2 group-hover:text-primary transition-colors" />
-                Watch Demo
-              </Button>
+            <div className="flex flex-col items-center md:items-start gap-8">
+              <DownloadButtons />
+              
+              <div className="flex items-center gap-6">
+                <Button variant="ghost" size="lg" className="rounded-full px-8 h-12 text-base font-semibold group">
+                  <PlayCircle className="w-5 h-5 mr-2 group-hover:text-primary transition-colors" />
+                  Watch Demo
+                </Button>
+                <div className="h-4 w-px bg-border/50 hidden sm:block" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
+                  <span className="size-2 bg-green-500 rounded-full animate-pulse" />
+                  Live on 4 platforms
+                </div>
+              </div>
             </div>
 
             {/* Social Proof Placeholder */}

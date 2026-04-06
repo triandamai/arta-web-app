@@ -1,24 +1,30 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { PlusCircleIcon, EnvelopeIcon } from "@phosphor-icons/react"
+} from "@/components/ui/sidebar";
+import { PlusCircleIcon, EnvelopeIcon } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: React.ReactNode
-  }[]
+    title: string;
+    url: string;
+    icon?: React.ReactNode;
+  }[];
 }) {
+  const router = useRouter();
+
+  function navigate(path: string) {
+    router.push(path);
+  }
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -28,8 +34,7 @@ export function NavMain({
               tooltip="Quick Create"
               className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
             >
-              <PlusCircleIcon
-              />
+              <PlusCircleIcon />
               <span>Quick Create</span>
             </SidebarMenuButton>
             <Button
@@ -37,8 +42,7 @@ export function NavMain({
               className="size-8 group-data-[collapsible=icon]:opacity-0"
               variant="outline"
             >
-              <EnvelopeIcon
-              />
+              <EnvelopeIcon />
               <span className="sr-only">Inbox</span>
             </Button>
           </SidebarMenuItem>
@@ -46,7 +50,10 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton
+                onClick={() => navigate(item.url)}
+                tooltip={item.title}
+              >
                 {item.icon}
                 <span>{item.title}</span>
               </SidebarMenuButton>
@@ -55,5 +62,5 @@ export function NavMain({
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }
